@@ -13,7 +13,7 @@ export default{
             params: {
               title: searchTerm,
               country: 'us',
-              show_type: 'movie',
+              // show_type: 'movie',
               output_language: 'en'
             },
             headers: {
