@@ -20,9 +20,7 @@
                     </ul>
                 </li>
             </ul>
-        </body>
-        
-        
+        </body>    
     </div>
 </template>
 
@@ -38,13 +36,21 @@
             let movieList = response.data.result;
             movies.value.length = 0;
             movieList.forEach(m => {
-                movies.value.push({
-                    title: m.title,
-                    tmdbId: m.tmdbId,
-                    streamers: getStreamerDetails(m.streamingInfo),
-                    image: m.posterURLs.original,
-                    overview: m.overview
-                });
+                if(Object.hasOwn(m.streamingInfo, 'us')){
+                    for(var key in m.streamingInfo.us) {
+                        for(var type in m.streamingInfo.us[key]) {
+                            if(m.streamingInfo.us[key][type].type == "free" || m.streamingInfo.us[key][type].type == "subscription"){
+                                movies.value.push({
+                                title: m.title,
+                                tmdbId: m.tmdbId,
+                                streamers: getStreamerDetails(m.streamingInfo),
+                                image: m.posterURLs.original,
+                                overview: m.overview
+                                });
+                            }
+                        }
+                    }           
+                }
             });
         })
         return movies;
@@ -61,13 +67,14 @@
                                 type: json.us[key][type].type
                     })
                 }
-                
             }
         }           
         return streamerDetails;
     }
     return streamerDetails;
  }
+
+ 
 
 </script>
 
