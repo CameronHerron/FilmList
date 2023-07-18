@@ -1,20 +1,21 @@
 <template>
   <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
   <TitleSearch />
-  <AdvancedSearch />
+  <!-- <AdvancedSearch /> -->
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld.vue'
+
 import TitleSearch from './components/TitleSearch.vue';
-import AdvancedSearch from './components/AdvancedSearch.vue';
+// import AdvancedSearch from './components/AdvancedSearch.vue';
+
 
 export default {
   name: 'App',
   components: {
     // HelloWorld,
     TitleSearch,
-    AdvancedSearch
+    // AdvancedSearch
   }
 }
 </script>
