@@ -7,23 +7,39 @@
         <form @submit.prevent="searchForMovie(searchTerm)">
             <input v-model="searchTerm">
             <button>Search</button>
-            <button v-on:click="getGenreIds()">Show advanced search options</button>
-            <div class="advanced-search" v-show="advanced">
-                <ul>
-                    <li class="genre-button" v-for="genre in genres" :key="genre.id">
-                        <button>{{ genre.name }}</button>
-                    </li>
-                </ul>
-            </div>
+            <button v-on:click="getGenreIds(); advanced = !advanced">Show advanced search options</button>
 
-            <!-- <div class="dropdown" v-show="advanced">
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Genres
-                </button>
-                <ul class="dropdown-menu">
-                    <li class="genre-button" v-for="genre in genres" :key="genre.id"><a class="dropdown-item" href="#">{{ genre.name }}</a></li>
-                </ul>
+            <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" v-on:click="getGenreIds()">
+                Show advanced search options
+            </button> -->
+
+            <!-- Modal -->
+            <!-- <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Advanced Search</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Genre:
+                            <select class="form-select" aria-label="Default select example" v-model="searchGenre">
+                                <option :value="genre.id" v-for="genre in genres" :key="genre.id">{{ genre.name }}</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
             </div> -->
+
+            <select class="form-select" aria-label="Default select example" v-show="advanced" v-model="searchGenre">
+                <option :value="genre.id" v-for="genre in genres" :key="genre.id">{{ genre.name }}</option>
+            </select>
         </form>
         <body>
             <ul>
@@ -57,6 +73,8 @@
 
     const movies = ref([]);
     let searchTerm = ref('');
+    let searchGenre = ref('');
+    let advanced = false;
 
     function searchForMovie(searchTerm){
         StreamingService.getMovieDetailsByName(searchTerm).then((response) => {
@@ -103,11 +121,10 @@
 
 
  const genres = ref([]);
-  let advanced = false;
+
   
   function getGenreIds(){
     genres.value.length = 0;
-    advanced = !advanced;
     StreamingService.getGenreIds().then((response) =>{
         let genreList = response.data.result;
         
