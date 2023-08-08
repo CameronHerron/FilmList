@@ -55,6 +55,19 @@ export default{
     };
 
     return axios.request(options);
+  },
+
+  getStreamingServices(){
+    const options = {
+      method: 'GET',
+      url: baseUrl + 'services',
+      headers:{
+        'X-RapidAPI-Key': API_KEY,
+        'X-RapidAPI-Host': 'streaming-availability.p.rapidapi.com'
+      }
+    };
+
+    return axios.request(options);
   }
 }
 
