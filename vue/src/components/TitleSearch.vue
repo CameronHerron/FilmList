@@ -13,6 +13,7 @@
             <span class="chosen-options">
                 <p class="chosen-genre" v-show="searchGenre != ''">Genre: {{ searchGenre.name }}</p>
                 <p class="chosen-streamer" v-show="searchStreamingService != ''">Streaming Service: {{ searchStreamingService}}</p>
+                <p class="chosen-show-type" v-show="searchShowType != ''">Show Type: {{ searchShowType}}</p>
             </span>
             <button type="button" class="btn btn-primary advanced" data-bs-toggle="modal" data-bs-target="#exampleModalCenter" >
                 Show advanced search options
@@ -37,10 +38,20 @@
                             <select class="form-select" aria-label="Default select example" v-model="searchStreamingService" v-on:click="getStreamingServiceNames()">
                                 <option :value="streamer.id" v-for="streamer in streamers" :key="streamer.id">{{ streamer.id }}</option>
                             </select>
+                            Show Type:
+                            <select class="form-select" aria-label="Default select example" v-model="searchShowType">
+                                <option>series</option>
+                                <option>movie</option>
+                                <option>all</option>
+                            </select>
+                            Keyword:
+                            <div class="keyword-search">
+                                <input v-model="searchKeyWord">
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="advancedSearch(searchGenre.id, searchStreamingService, searchShowType, searchKeyWord)">Search</button>
                         </div>
                     </div>
                 </div>
@@ -85,6 +96,8 @@
     let searchTerm = ref('');
     let searchGenre = ref('');
     let searchStreamingService = ref('');
+    let searchShowType = ref('');
+    let searchKeyWord = ref('');
     // let advanced = false;
 
     function searchForMovie(searchTerm){
@@ -110,7 +123,32 @@
             });
         })
         return movies;
- }
+    }
+
+    function advancedSearch(searchGenre, searchStreamingService, searchShowType, searchKeyWord){
+        StreamingService.advancedSearch(searchGenre, searchStreamingService, searchShowType, searchKeyWord).then((response) => {
+            let movieList = response.data.result;
+            movies.value.length = 0;
+            movieList.forEach(m => {
+                if(Object.hasOwn(m.streamingInfo, 'us')){
+                    for(var key in m.streamingInfo.us) {
+                        for(var type in m.streamingInfo.us[key]) {
+                            if(m.streamingInfo.us[key][type].type == "free" || m.streamingInfo.us[key][type].type == "subscription"){
+                                movies.value.push({
+                                title: m.title,
+                                tmdbId: m.tmdbId,
+                                streamers: getStreamerDetails(m.streamingInfo),
+                                image: m.posterURLs.original,
+                                overview: m.overview
+                                });
+                            }
+                        }
+                    }           
+                }
+            });
+        })
+        return movies;
+    }
 
  function getStreamerDetails(json){
     let streamerDetails = [];
@@ -134,32 +172,34 @@
  const genres = ref([]);
 
   function getGenreIds(){
-    genres.value.length = 0;
-    StreamingService.getGenreIds().then((response) =>{
-        let genreList = response.data.result;
-        
-            for(var key in genreList){
-                genres.value.push( {
-                    id: key,
-                    name: genreList[key]
-                })
-            }
-    })
+    if(genres.value.length == 0){
+        StreamingService.getGenreIds().then((response) =>{
+            let genreList = response.data.result;
+            
+                for(var key in genreList){
+                    genres.value.push( {
+                        id: key,
+                        name: genreList[key]
+                    })
+                }
+        })
+    }
     return genres;
   }
 
   const streamers = ref([]);
   function getStreamingServiceNames(){
-    streamers.value.length = 0;
-    StreamingService.getStreamingServices().then((response) =>{
-        let streamerList = response.data.result;
-        
-        for(var key in streamerList){
-                streamers.value.push( {
-                    id: key,
-                })
-            }
-    })
+    if(streamers.value.length == 0){
+        StreamingService.getStreamingServices().then((response) =>{
+            let streamerList = response.data.result;
+            
+            for(var key in streamerList){
+                    streamers.value.push( {
+                        id: key,
+                    })
+                }
+        })
+    }
   }
 </script>
 

@@ -25,25 +25,6 @@ export default{
         return axios.request(options); 
     },
 
-    getShowDetailsByName(searchTerm){
-      const options = {
-          method: 'GET',
-          url: baseUrl + 'search/title',
-          params: {
-            title: searchTerm,
-            country: 'us',
-            show_type: 'series',
-            output_language: 'en'
-          },
-          headers: {
-            'X-RapidAPI-Key': API_KEY,
-            'X-RapidAPI-Host': 'streaming-availability.p.rapidapi.com'
-          }
-      };
-      
-      return axios.request(options); 
-  },
-
   getGenreIds(){
     const options = {
       method: 'GET',
@@ -66,6 +47,33 @@ export default{
         'X-RapidAPI-Host': 'streaming-availability.p.rapidapi.com'
       }
     };
+
+    return axios.request(options);
+  },
+
+  advancedSearch(genre = null, streamer = 'netflix, prime, hulu', showType = 'all', keyword = null){
+    const options = {
+      method: 'GET',
+      url: baseUrl + 'search/basic',
+      params:{
+        country: 'us',
+        services: streamer
+      },
+      headers: {
+        'X-RapidAPI-Key': API_KEY,
+        'X-RapidAPI-Host': 'streaming-availability.p.rapidapi.com'
+      }
+    };
+
+    if(genre != null && genre != ''){
+      options.params.genre = genre;
+    }
+    if(showType != null && showType != ''){
+      options.params.show_type = showType;
+    }
+    if(keyword != null && keyword != ''){
+      options.params.keyword = keyword;
+    }
 
     return axios.request(options);
   }
