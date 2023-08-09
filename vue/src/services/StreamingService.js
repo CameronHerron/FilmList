@@ -51,13 +51,12 @@ export default{
     return axios.request(options);
   },
 
-  advancedSearch(genre = null, streamer = 'netflix, prime, hulu', showType = 'all', keyword = null){
+  advancedSearch(genre = null, streamer = null, showType = 'all', keyword = null){
     const options = {
       method: 'GET',
       url: baseUrl + 'search/basic',
       params:{
-        country: 'us',
-        services: streamer
+        country: 'us'
       },
       headers: {
         'X-RapidAPI-Key': API_KEY,
@@ -73,6 +72,12 @@ export default{
     }
     if(keyword != null && keyword != ''){
       options.params.keyword = keyword;
+    }
+
+    if(streamer != null && streamer != ''){
+      options.params.services = streamer;
+    }else{
+      options.params.services = 'netflix, prime, hulu';
     }
 
     return axios.request(options);

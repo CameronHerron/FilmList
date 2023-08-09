@@ -16,7 +16,7 @@
                 <p class="chosen-show-type" v-show="searchShowType != ''">Show Type: {{ searchShowType}}</p>
             </span>
             <button type="button" class="btn btn-primary advanced" data-bs-toggle="modal" data-bs-target="#exampleModalCenter" >
-                Show advanced search options
+                Advanced
             </button>
 
             <!-- Modal -->
@@ -229,9 +229,19 @@
     form{
         display: flex;
         flex-direction: column;
+        align-items: center;
+    }
+    form button{
+        max-width: 40vw;
     }
     .advanced{
         margin: 5px;
+        border-radius: 125px;
     }
-
+    .basic-search{
+        display:flex;
+    }
+    .basic-search button{
+        margin-left: 5px;
+    }
 </style>
