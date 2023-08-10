@@ -9,7 +9,6 @@
                 <input v-model="searchTerm">
                 <button class="btn btn-primary">Search</button>
             </div>
-            <!-- <button v-on:click="getGenreIds(); advanced = !advanced">Show advanced search options</button> -->
             <span class="chosen-options">
                 <p class="chosen-genre" v-show="searchGenre != ''">Genre: {{ searchGenre.name }}</p>
                 <p class="chosen-streamer" v-show="searchStreamingService != ''">Streaming Service: {{ searchStreamingService}}</p>
@@ -57,25 +56,24 @@
                 </div>
             </div>
 
-            <!-- <select class="form-select" aria-label="Default select example" v-show="advanced" v-model="searchGenre">
-                <option :value="genre.id" v-for="genre in genres" :key="genre.id">{{ genre.name }}</option>
-            </select> -->
         </form>
         <body>
             <ul>
                 <li class="movie-card" v-for="movie in movies" :key="movie.tmdbId">
-                    <div class="card mb-3" style="max-width: 540px;">
+                    <div class="card mb-3 h-100" style="max-width: 540px;">
                         <div class="row g-0">
                             <div class="col-md-4">
-                                <img :src="movie.image" class="img-fluid rounded-start" alt="...">
+                                <img :src="movie.image" class="img-fluid rounded" alt="...">
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ movie.title }}</h5>
-                                    <p class="card-text">{{ movie.overview }}</p>
+                                    <p class="movie-overview">{{ movie.overview }}</p>
                                     <p class="card-text">
                                         <ul class="streaming">
-                                            <li v-for="streamer in movie.streamers" :key="streamer">{{ streamer.streamerName }} : {{ streamer.type }}</li>
+                                            <li v-for="streamer in movie.streamers" :key="streamer">
+                                                <img class="streamer-logo" :src="streamer.logo"/>
+                                            </li>
                                         </ul>
                                     </p>
                                 </div>
@@ -150,57 +148,81 @@
         return movies;
     }
 
- function getStreamerDetails(json){
-    let streamerDetails = [];
-    if(Object.hasOwn(json, 'us')){
-        for(var key in json.us) {
-            for(var type in json.us[key]) {
-                if(json.us[key][type].type == "free" || json.us[key][type].type == "subscription"){
-                    streamerDetails.push({
-                                streamerName: key,
-                                type: json.us[key][type].type
-                    })
+    const streamerLogos = {
+        netflix: "https://www.edigitalagency.com.au/wp-content/uploads/netflix-logo-png-large.png",
+        hbo: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg",
+        all4: "https://img.favpng.com/13/23/1/channel-4-all-4-logo-television-png-favpng-YrUfxYQY109ayyg7ercffmE9p.jpg",
+        britbox: "https://download.logo.wine/logo/BritBox/BritBox-Logo.wine.png",
+        crave: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/CraveTV_logo.svg/1280px-CraveTV_logo.svg.png",
+        curiosity: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/CuriosityStreamBlack.svg/1200px-CuriosityStreamBlack.svg.png",
+        disney: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Disney%2B_logo.svg/1041px-Disney%2B_logo.svg.png",
+        hotstar: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Disney%2B_Hotstar_logo.svg/2560px-Disney%2B_Hotstar_logo.svg.png",
+        hulu: "https://download.logo.wine/logo/Hulu/Hulu-Logo.wine.png",
+        iplayer: "https://upload.wikimedia.org/wikipedia/en/thumb/f/fd/BBC_iPlayer_logo_%282021%29.svg/2560px-BBC_iPlayer_logo_%282021%29.svg.png",
+        mubi: "https://upload.wikimedia.org/wikipedia/commons/5/51/Mubi_logo.svg",
+        now: "https://w7.pngwing.com/pngs/870/593/png-transparent-younow-streaming-media-live-streaming-broadcasting-livestream-now-television-text-logo.png",
+        paramount: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Paramount%2B_logo.svg/2560px-Paramount%2B_logo.svg.png",
+        peacock: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/NBCUniversal_Peacock_Logo.svg/2560px-NBCUniversal_Peacock_Logo.svg.png",
+        prime: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Amazon_Prime_Video_logo.svg/2560px-Amazon_Prime_Video_logo.svg.png",
+        showtime: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Showtime.svg/2560px-Showtime.svg.png",
+        stan: "https://upload.wikimedia.org/wikipedia/commons/1/19/Stan_logo.png",
+        starz: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Starz_2016.svg/2560px-Starz_2016.svg.png",
+        wow: "https://www.tvhase.de/wp-content/uploads/2022/06/sky-WOW-logo.png",
+        zee5: "https://1000logos.net/wp-content/uploads/2022/01/Zee5-Logo.png"
+    }
+
+    function getStreamerDetails(json){
+        let streamerDetails = [];
+        if(Object.hasOwn(json, 'us')){
+            for(var key in json.us) {
+                for(var type in json.us[key]) {
+                    if(json.us[key][type].type == "free" || json.us[key][type].type == "subscription"){
+                        streamerDetails.push({
+                                    streamerName: key,
+                                    type: json.us[key][type].type,
+                                    logo: streamerLogos[key]
+                        })
+                    }
                 }
-            }
-        }           
+            }           
+            return streamerDetails;
+        }
         return streamerDetails;
     }
-    return streamerDetails;
- }
 
 
- const genres = ref([]);
+    const genres = ref([]);
 
-  function getGenreIds(){
-    if(genres.value.length == 0){
-        StreamingService.getGenreIds().then((response) =>{
-            let genreList = response.data.result;
-            
-                for(var key in genreList){
-                    genres.value.push( {
-                        id: key,
-                        name: genreList[key]
-                    })
-                }
-        })
+    function getGenreIds(){
+        if(genres.value.length == 0){
+            StreamingService.getGenreIds().then((response) =>{
+                let genreList = response.data.result;
+                
+                    for(var key in genreList){
+                        genres.value.push( {
+                            id: key,
+                            name: genreList[key]
+                        })
+                    }
+            })
+        }
+        return genres;
     }
-    return genres;
-  }
 
-  const streamers = ref([]);
-  function getStreamingServiceNames(){
-    if(streamers.value.length == 0){
-        StreamingService.getStreamingServices().then((response) =>{
-            let streamerList = response.data.result;
-            
-            for(var key in streamerList){
-                    streamers.value.push( {
-                        id: key,
-                    })
-                }
-        })
+    const streamers = ref([]);
+    function getStreamingServiceNames(){
+        if(streamers.value.length == 0){
+            StreamingService.getStreamingServices().then((response) =>{
+                let streamerList = response.data.result;
+                
+                for(var key in streamerList){
+                        streamers.value.push( {
+                            id: key,
+                        })
+                    }
+            })
+        }
     }
-  }
 </script>
 
 <style>
@@ -236,12 +258,14 @@
     }
     .advanced{
         margin: 5px;
-        border-radius: 125px;
     }
     .basic-search{
         display:flex;
     }
     .basic-search button{
         margin-left: 5px;
+    }
+    .streamer-logo{
+        max-width: 20%;
     }
 </style>
