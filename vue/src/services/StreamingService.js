@@ -75,9 +75,9 @@ export default{
     }
 
     if(streamer != null && streamer != ''){
-      options.params.services = streamer;
+      options.params.services = streamer + ".subscription";
     }else{
-      options.params.services = 'netflix, prime, hulu';
+      options.params.services = 'netflix.subscription, prime.subscription, hulu.subscription';
     }
 
     return axios.request(options);
