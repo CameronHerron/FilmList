@@ -2,7 +2,7 @@
     <div>
         <header>
             <h1 class="display-1">StreamIt</h1>
-        </header>
+        
         
         <div class="search-container">
             <input v-model="searchTerm">
@@ -14,6 +14,7 @@
                 </button>
             </div>
         </div>
+        
 
         <span class="chosen-options">
             <span class="badge rounded-pill bg-secondary" v-show="searchGenre != ''">Genre: {{ searchGenre.name }}
@@ -31,6 +32,7 @@
                 <button class="btn-close btn-close-white" aria-hidden="true" @click="searchKeyWord = ''">&times;</button>
             </span>
         </span>
+        </header>
 
         <!-- Modal -->
         <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
@@ -258,6 +260,8 @@ body {
 .card-list {
     display: flex;
     flex-wrap: wrap;
+    padding-left: 0px;
+    justify-content: center;
 }
 
 li {
@@ -292,8 +296,8 @@ form {
     max-width: 28%;
 }
 
-.chosen-options {
-    margin: 5px;
+.chosen-options span{
+    margin: 3px;
 }
 
 .search-buttons {
@@ -304,6 +308,15 @@ form {
 .search-container{
     justify-content: center;
 }
-
+header{
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    background-color: white;
+    box-shadow: 0 4px 2px -2px gray;
+    padding-bottom: 5px;
+}
 
 </style>
