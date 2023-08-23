@@ -1,22 +1,13 @@
 <template>
     <div>
         <header>
-            <!-- <h5><small class="text-muted">Search it</small></h5>
-            <h3><small class="text-muted">Find it</small></h3>
-            <h2><small class="text-muted">Watch it</small></h2>
-            <h1 class="header display-1">StreamIt</h1> -->
-            <h1 class="display-6 text-muted grid-item">Search it</h1>
-            <h1 class="display-5 text-muted grid-item">Find it</h1>
-            <h1 class="display-4 text-muted grid-item">Watch it</h1>
-            <h1 class="display-1 grid-item">StreamIt</h1>
+            <h1 class="display-1">StreamIt</h1>
         </header>
         
-
-
         <div class="search-container">
             <input v-model="searchTerm">
             <div class="search-buttons">
-                <button class="btn btn-primary" @click.prevent="searchForMovie(searchTerm)">Search</button>
+                <button class="btn btn-primary me-1 basic-button" @click.prevent="searchForMovie(searchTerm)">Search</button>
                 <button type="button" class="btn btn-primary advanced" data-bs-toggle="modal"
                     data-bs-target="#exampleModalCenter">
                     Advanced
@@ -86,7 +77,7 @@
         </div>
 
         <body>
-            <ul>
+            <ul class="card-list">
                 <li class="movie-card" v-for="movie in movies" :key="movie.tmdbId">
                     <div class="card mb-3 h-100" style="max-width: 540px;">
                         <div class="row g-0">
@@ -159,14 +150,17 @@ function advancedSearch(searchGenre, searchStreamingService, searchShowType, sea
             if (Object.hasOwn(m.streamingInfo, 'us')) {
                 for (var key in m.streamingInfo.us) {
                     for (var type in m.streamingInfo.us[key]) {
-                        if (m.streamingInfo.us[key][type].type == "free" || m.streamingInfo.us[key][type].type == "subscription") {
-                            movies.value.push({
-                                title: m.title,
-                                tmdbId: m.tmdbId,
-                                streamers: getStreamerDetails(m.streamingInfo),
-                                image: m.posterURLs.original,
-                                overview: m.overview
-                            });
+                        if (m.streamingInfo.us[key][type].type == "subscription") {
+                            const found = movies.value.some(x => x.title === m.title);
+                            if(!found){
+                                movies.value.push({
+                                    title: m.title,
+                                    tmdbId: m.tmdbId,
+                                    streamers: getStreamerDetails(m.streamingInfo),
+                                    image: m.posterURLs.original,
+                                    overview: m.overview
+                                });
+                            }
                         }
                     }
                 }
@@ -205,11 +199,14 @@ function getStreamerDetails(json) {
         for (var key in json.us) {
             for (var type in json.us[key]) {
                 if (json.us[key][type].type == "subscription") {
-                    streamerDetails.push({
-                        streamerName: key,
-                        type: json.us[key][type].type,
-                        logo: streamerLogos[key]
-                    })
+                    const found = streamerDetails.some(x => x.streamerName === key);
+                    if(!found){
+                        streamerDetails.push({
+                            streamerName: key,
+                            type: json.us[key][type].type,
+                            logo: streamerLogos[key]
+                        });
+                    }
                 }
             }
         }
@@ -258,7 +255,7 @@ body {
     justify-content: center;
 }
 
-ul {
+.card-list {
     display: flex;
     flex-wrap: wrap;
 }
@@ -273,8 +270,7 @@ li {
 }
 
 .streaming {
-    display: flex;
-    align-items: space-between;
+    align-items: space-around;
 }
 
 .streaming li {
@@ -287,12 +283,13 @@ form {
     align-items: center;
 }
 
-.advanced {
+.advanced .basic-button {
     margin: 5px;
+    
 }
 
 .streamer-logo {
-    max-width: 25%;
+    max-width: 28%;
 }
 
 .chosen-options {
@@ -307,9 +304,6 @@ form {
 .search-container{
     justify-content: center;
 }
-header{
-    display: grid;
-    /* grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 1fr; */
-}
+
+
 </style>
