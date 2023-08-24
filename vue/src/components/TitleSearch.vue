@@ -1,109 +1,105 @@
 <template>
-    <div>
-        <header>
-            <h1 class="display-1">StreamIt</h1>
-        
-        
+    <header id="header-box">
+        <h1 class="display-1">StreamIt</h1>
+
         <div class="search-container">
             <input v-model="searchTerm">
             <div class="search-buttons">
-                <button class="btn btn-primary me-1 basic-button" @click.prevent="searchForMovie(searchTerm)">Search</button>
+                <button class="btn btn-primary me-1 basic-button"
+                    @click.prevent="searchForMovie(searchTerm)">Search</button>
                 <button type="button" class="btn btn-primary advanced" data-bs-toggle="modal"
                     data-bs-target="#exampleModalCenter">
                     Advanced
                 </button>
             </div>
         </div>
-        
 
         <span class="chosen-options">
-            <span class="badge rounded-pill bg-secondary" v-show="searchGenre != ''">Genre: {{ searchGenre.name }}
+            <span class="badge rounded-pill" v-show="searchGenre != ''">Genre: {{ searchGenre.name }}
                 <button class="btn-close btn-close-white" aria-hidden="true" @click="searchGenre = ''">&times;</button>
             </span>
-            <span class="badge rounded-pill bg-secondary" v-show="searchStreamingService != ''">Streaming Service: {{
+            <span class="badge rounded-pill" v-show="searchStreamingService != ''">Streaming Service: {{
                 searchStreamingService }}
                 <button class="btn-close btn-close-white" aria-hidden="true"
                     @click="searchStreamingService = ''">&times;</button>
             </span>
-            <span class="badge rounded-pill bg-secondary" v-show="searchShowType != ''">Show Type: {{ searchShowType }}
+            <span class="badge rounded-pill" v-show="searchShowType != ''">Show Type: {{ searchShowType }}
                 <button class="btn-close btn-close-white" aria-hidden="true" @click="searchShowType = ''">&times;</button>
             </span>
-            <span class="badge rounded-pill bg-secondary" v-show="searchKeyWord != ''">Keyword: {{ searchKeyWord }}
+            <span class="badge rounded-pill" v-show="searchKeyWord != ''">Keyword: {{ searchKeyWord }}
                 <button class="btn-close btn-close-white" aria-hidden="true" @click="searchKeyWord = ''">&times;</button>
             </span>
         </span>
-        </header>
+    </header>
 
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Advanced Search</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        Genre:
-                        <select class="form-select" aria-label="Default select example" v-model="searchGenre"
-                            v-on:click="getGenreIds()">
-                            <option :value="{ id: genre.id, name: genre.name }" v-for="genre in genres" :key="genre.id">{{
-                                genre.name }}</option>
-                        </select>
-                        Streaming Service:
-                        <select class="form-select" aria-label="Default select example" v-model="searchStreamingService"
-                            v-on:click="getStreamingServiceNames()">
-                            <option :value="streamer.id" v-for="streamer in streamers" :key="streamer.id">{{ streamer.id }}
-                            </option>
-                        </select>
-                        Show Type:
-                        <select class="form-select" aria-label="Default select example" v-model="searchShowType">
-                            <option>series</option>
-                            <option>movie</option>
-                            <option>all</option>
-                        </select>
-                        Keyword:
-                        <div class="keyword-search">
-                            <input v-model="searchKeyWord">
+    <body>
+        <ul class="card-list">
+            <li class="movie-card" v-for="movie in movies" :key="movie.tmdbId">
+                <div class="card mb-3 h-100" style="max-width: 540px;">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img :src="movie.image" class="img-fluid rounded" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ movie.title }}</h5>
+                                <p class="movie-overview">{{ movie.overview }}</p>
+                            </div>
+                            <p class="card-text streaming-logos">
+                            <ul class="streaming">
+                                <li v-for="streamer in movie.streamers" :key="streamer">
+                                    <img class="streamer-logo" :src="streamer.logo" />
+                                </li>
+                            </ul>
+                            </p>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                            @click="advancedSearch(searchGenre.id, searchStreamingService, searchShowType, searchKeyWord)">Search</button>
+                </div>
+            </li>
+        </ul>
+    </body>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Advanced Search</h5>
+                    <button class="close btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Genre:
+                    <select class="form-select" v-model="searchGenre"
+                        v-on:click="getGenreIds()">
+                        <option :value="{ id: genre.id, name: genre.name }" v-for="genre in genres" :key="genre.id">{{
+                            genre.name }}</option>
+                    </select>
+                    Streaming Service:
+                    <select class="form-select" aria-label="Default select example" v-model="searchStreamingService"
+                        v-on:click="getStreamingServiceNames()">
+                        <option :value="streamer.id" v-for="streamer in streamers" :key="streamer.id">{{ streamer.id }}
+                        </option>
+                    </select>
+                    Show Type:
+                    <select class="form-select" aria-label="Default select example" v-model="searchShowType">
+                        <option>series</option>
+                        <option>movie</option>
+                        <option>all</option>
+                    </select>
+                    Keyword:
+                    <div class="keyword-search">
+                        <input v-model="searchKeyWord">
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                        @click="advancedSearch(searchGenre.id, searchStreamingService, searchShowType, searchKeyWord)">Search</button>
                 </div>
             </div>
         </div>
-
-        <body>
-            <ul class="card-list">
-                <li class="movie-card" v-for="movie in movies" :key="movie.tmdbId">
-                    <div class="card mb-3 h-100" style="max-width: 540px;">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                <img :src="movie.image" class="img-fluid rounded" alt="...">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ movie.title }}</h5>
-                                    <p class="movie-overview">{{ movie.overview }}</p>
-                                    <p class="card-text">
-                                    <ul class="streaming">
-                                        <li v-for="streamer in movie.streamers" :key="streamer">
-                                            <img class="streamer-logo" :src="streamer.logo" />
-                                        </li>
-                                    </ul>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </body>
     </div>
 </template>
 
@@ -154,7 +150,7 @@ function advancedSearch(searchGenre, searchStreamingService, searchShowType, sea
                     for (var type in m.streamingInfo.us[key]) {
                         if (m.streamingInfo.us[key][type].type == "subscription") {
                             const found = movies.value.some(x => x.title === m.title);
-                            if(!found){
+                            if (!found) {
                                 movies.value.push({
                                     title: m.title,
                                     tmdbId: m.tmdbId,
@@ -202,7 +198,7 @@ function getStreamerDetails(json) {
             for (var type in json.us[key]) {
                 if (json.us[key][type].type == "subscription") {
                     const found = streamerDetails.some(x => x.streamerName === key);
-                    if(!found){
+                    if (!found) {
                         streamerDetails.push({
                             streamerName: key,
                             type: json.us[key][type].type,
@@ -249,12 +245,18 @@ function getStreamingServiceNames() {
         })
     }
 }
+
+// function addShadow() {
+//   var element = document.getElementById("header-box");
+//   element.classList.toggle("shadow");
+// }
 </script>
 
 <style>
 body {
     display: flex;
     justify-content: center;
+    background-color: #e5e7d9 !important;
 }
 
 .card-list {
@@ -273,12 +275,20 @@ li {
     margin: 10px;
 }
 
+.card {
+    background-color: #f8f7f7 !important;
+    font-family: 'Quicksand', sans-serif !important;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
 .streaming {
     align-items: space-around;
+    justify-self: flex-end;
 }
 
 .streaming li {
     margin: 2px;
+    padding-bottom: 3px;
 }
 
 form {
@@ -289,14 +299,14 @@ form {
 
 .advanced .basic-button {
     margin: 5px;
-    
+
 }
 
 .streamer-logo {
     max-width: 28%;
 }
 
-.chosen-options span{
+.chosen-options span {
     margin: 3px;
 }
 
@@ -305,18 +315,69 @@ form {
     justify-content: center;
     padding: 5px;
 }
-.search-container{
+
+.search-container {
     justify-content: center;
 }
-header{
+
+header {
     position: sticky;
     top: 0;
     left: 0;
     width: 100%;
     z-index: 1;
-    background-color: white;
+    background-color: #20152e;
     box-shadow: 0 4px 2px -2px gray;
     padding-bottom: 5px;
+    align-self: flex-start;
 }
 
-</style>
+header h1 {
+    color: #e5e7d9 !important;
+    font-family: 'Bebas Neue', sans-serif;
+    margin-bottom: -5px;
+}
+
+.btn {
+    background-color: #b38cb6 !important;
+    border-color: #b38cb6 !important;
+    font-family: 'Quicksand', sans-serif !important;
+}
+
+.rounded-pill {
+    background-color: #63545b !important;
+    font-family: 'Quicksand', sans-serif !important;
+}
+
+.modal {
+    font-family: 'Quicksand', sans-serif !important;
+}
+
+.modal-footer,
+.modal-header {
+    background-color: #20152e !important;
+    color: #e5e7d9 !important;
+}
+
+.modal-body {
+    background-color: #e5e7d9 !important;
+}
+
+.modal-body input {
+    color: #e5e7d9 !important;
+}
+
+.col-md-8 {
+    display: flex;
+    flex-direction: column;
+    height: 100% !important;
+}
+
+.streaming-logos {
+    align-self: flex-end !important;
+    margin-bottom: 5px;
+}
+
+.row {
+    height: 100% !important;
+}</style>
