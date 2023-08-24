@@ -1,6 +1,6 @@
 <template>
     <header id="header-box">
-        <h1 class="display-1">StreamIt</h1>
+        <h1 class="display-1" @click="reloadPage()">StreamIt</h1>
 
         <div class="search-container">
             <input v-model="searchTerm">
@@ -65,9 +65,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Advanced Search</h5>
-                    <button class="close btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button class="close btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     Genre:
@@ -113,7 +111,6 @@ let searchGenre = ref('');
 let searchStreamingService = ref('');
 let searchShowType = ref('');
 let searchKeyWord = ref('');
-// let advanced = false;
 
 function searchForMovie(searchTerm) {
     StreamingService.getMovieDetailsByName(searchTerm).then((response) => {
@@ -226,8 +223,10 @@ function getGenreIds() {
                     name: genreList[key]
                 })
             }
+            genres.value.sort((a, b) => (a.name > b.name) ? 1: -1);
         })
     }
+    
     return genres;
 }
 
@@ -246,10 +245,9 @@ function getStreamingServiceNames() {
     }
 }
 
-// function addShadow() {
-//   var element = document.getElementById("header-box");
-//   element.classList.toggle("shadow");
-// }
+function reloadPage(){
+    window.location.reload();
+}
 </script>
 
 <style>
@@ -336,6 +334,7 @@ header h1 {
     color: #e5e7d9 !important;
     font-family: 'Bebas Neue', sans-serif;
     margin-bottom: -5px;
+    cursor: pointer;
 }
 
 .btn {
@@ -361,10 +360,6 @@ header h1 {
 
 .modal-body {
     background-color: #e5e7d9 !important;
-}
-
-.modal-body input {
-    color: #e5e7d9 !important;
 }
 
 .col-md-8 {
