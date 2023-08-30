@@ -47,8 +47,15 @@
                             <div class="card-body">
                                 <h5 class="card-title">{{ movie.title }}</h5>
                                 <p class="movie-overview">{{ movie.overview }}</p>
+                                <p class="card-text streaming-logos mobile">
+                                    <ul class="streaming">
+                                        <li v-for="streamer in movie.streamers" :key="streamer">
+                                            <img class="streamer-logo" :src="streamer.logo" />
+                                        </li>
+                                    </ul>
+                                </p>
                             </div>
-                            <p class="card-text streaming-logos">
+                            <p class="card-text streaming-logos desktop">
                             <ul class="streaming">
                                 <li v-for="streamer in movie.streamers" :key="streamer">
                                     <img class="streamer-logo" :src="streamer.logo" />
@@ -61,7 +68,7 @@
             </li>
         </ul>
     </body>
-    <!-- Modal -->
+    <!-- Advanced Search Modal -->
     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -424,4 +431,21 @@ header h1 {
     border-radius: 10px;
     border: 3px solid #63545b;
   }
+
+  .mobile, .desktop{
+    display: none;
+  }
+
+  @media only screen and (max-width: 768px){
+    .mobile{
+        display: block;
+    }
+  }
+
+  @media only screen and (min-width: 768px){
+    .desktop{
+        display: block;
+    }
+  }
+
 </style>
