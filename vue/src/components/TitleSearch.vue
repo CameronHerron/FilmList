@@ -401,7 +401,6 @@ header h1 {
 }
 
 .row {
-<<<<<<< HEAD
     height: 100% !important;
 }
 
@@ -425,8 +424,4 @@ header h1 {
     border-radius: 10px;
     border: 3px solid #63545b;
   }
-=======
-  height: 100% !important;
-}
->>>>>>> 740aabd0b881252b3cd13a98d2deb3c8620ed3eb
 </style>
