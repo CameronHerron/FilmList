@@ -375,4 +375,26 @@ header h1 {
 
 .row {
     height: 100% !important;
-}</style>
+}
+
+  /* Firefox */
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: #63545b #ffffff;
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 16px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #e5e7d9;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #63545b;
+    border-radius: 10px;
+    border: 3px solid #63545b;
+  }
+</style>
