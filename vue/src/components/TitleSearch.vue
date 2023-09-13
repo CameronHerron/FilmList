@@ -36,6 +36,10 @@
     </header>
 
     <body>
+        <h2 class="greeting-message" v-if="!movies.length && !noneFound">
+          Search for your favorite movie or tv show by title, or find new favorites using our advanced search to find options on 20 different streaming platforms!
+        </h2>
+        <h2 class="error-message" v-if="noneFound == true">No results found.<br>Please adjust your search options and try again.</h2>
         <ul class="card-list">
             <li class="movie-card" v-for="movie in movies" :key="movie.tmdbId">
                 <div class="card mb-3 h-100" style="max-width: 540px;">
@@ -122,10 +126,16 @@ let searchGenre = ref("");
 let searchStreamingService = ref("");
 let searchShowType = ref("");
 let searchKeyWord = ref("");
+let noneFound = ref(false);
 
 function searchForMovie(searchTerm) {
   StreamingService.getMovieDetailsByName(searchTerm).then((response) => {
     let movieList = response.data.result;
+    if(movieList.length == 0){
+      noneFound.value = true;
+    }else{
+      noneFound.value = false;
+    }
     movies.value.length = 0;
     movieList.forEach((m) => {
       if (Object.hasOwn(m.streamingInfo, "us")) {
@@ -164,6 +174,11 @@ function advancedSearch(
     searchKeyWord
   ).then((response) => {
     let movieList = response.data.result;
+    if(movieList.length == 0){
+      noneFound.value = true;
+    }else{
+      noneFound.value = false;
+    }
     movies.value.length = 0;
     movieList.forEach((m) => {
       if (Object.hasOwn(m.streamingInfo, "us")) {
@@ -291,6 +306,10 @@ body {
   background-color: #e5e7d9 !important;
 }
 
+.greeting-message, .error-message{
+  margin-top: 18px;
+  max-width: 75%;
+}
 .card-list {
   display: flex;
   flex-wrap: wrap;
