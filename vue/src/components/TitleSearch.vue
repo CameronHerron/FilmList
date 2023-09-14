@@ -37,7 +37,7 @@
 
     <body>
         <h2 class="greeting-message" v-if="!movies.length && !noneFound">
-          Search for your favorite movie or tv show by title, or find new favorites using our advanced search to find options on 20 different streaming platforms!
+          Search for your favorite movie or tv show by title! <br> Or use our advanced search to find new favorites across 20 different streaming platforms!
         </h2>
         <h2 class="error-message" v-if="noneFound == true">No results found.<br>Please adjust your search options and try again.</h2>
         <ul class="card-list">
@@ -113,6 +113,9 @@
             </div>
         </div>
     </div>
+    <footer v-if="!movies.length && !noneFound">
+      <h2>All results are free with subscriptions on their listed streaming service.</h2>
+    </footer>
 </div>
 </template>
 
@@ -381,6 +384,16 @@ header {
   box-shadow: 0 4px 2px -2px gray;
   padding-bottom: 5px;
   align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+footer{
+  bottom: 0;
+  position: absolute;
+  width: 100%;
+  padding-bottom: 15px;
 }
 
 header h1 {
