@@ -1,7 +1,8 @@
 import axios from "axios";
-import STORED_API_KEY from "/API_KEYS.txt";
+// import STORED_API_KEY from "/API_KEYS.txt";
 
-const API_KEY = STORED_API_KEY;
+// const API_KEY = STORED_API_KEY;
+const API_KEY = process.env.VUE_APP_API_KEY;
 
 let baseUrl = "https://streaming-availability.p.rapidapi.com/v2/";
 export default{
