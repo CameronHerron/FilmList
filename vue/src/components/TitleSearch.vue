@@ -36,9 +36,9 @@
     </header>
 
     <body>
-        <h2 class="greeting-message" v-if="!movies.length && !noneFound">
-          Search for your favorite movie or tv show by title! <br> Or use our advanced search to find new favorites across 20 different streaming platforms!
-        </h2>
+        <h3 class="greeting-message" v-if="!movies.length && !noneFound">
+          Search for your favorite movie or tv show by title. <br> Or use our advanced search to find new favorites across 20 different streaming platforms!
+        </h3>
         <h2 class="error-message" v-if="noneFound == true">No results found.<br>Please adjust your search options and try again.</h2>
         <ul class="card-list">
             <li class="movie-card" v-for="movie in movies" :key="movie.tmdbId">
@@ -404,13 +404,13 @@ header h1 {
 }
 
 .btn {
-  background-color: #b38cb6 !important;
-  border-color: #b38cb6 !important;
+  background-color: #5E6A9F !important;
+  border-color: #5E6A9F !important;
   font-family: "Quicksand", sans-serif !important;
 }
 
 .rounded-pill {
-  background-color: #63545b !important;
+  background-color: #72577F !important;
   font-family: "Quicksand", sans-serif !important;
 }
 
@@ -459,9 +459,9 @@ header h1 {
   }
 
   *::-webkit-scrollbar-thumb {
-    background-color: #63545b;
+    background-color: #20152e;
     border-radius: 10px;
-    border: 3px solid #63545b;
+    border: 3px solid #20152e;
   }
 
   .mobile, .desktop{
