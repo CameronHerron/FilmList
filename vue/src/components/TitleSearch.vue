@@ -148,13 +148,16 @@ function searchForMovie(searchTerm) {
               m.streamingInfo.us[key][type].type == "free" ||
               m.streamingInfo.us[key][type].type == "subscription"
             ) {
-              movies.value.push({
-                title: m.title,
-                tmdbId: m.tmdbId,
-                streamers: getStreamerDetails(m.streamingInfo),
-                image: m.posterURLs.original,
-                overview: m.overview,
-              });
+              const found = movies.value.some((x) => x.title === m.title);
+              if (!found){
+                movies.value.push({
+                  title: m.title,
+                  tmdbId: m.tmdbId,
+                  streamers: getStreamerDetails(m.streamingInfo),
+                  image: m.posterURLs.original,
+                  overview: m.overview
+                });
+              }
             }
           }
         }
