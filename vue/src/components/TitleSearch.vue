@@ -211,6 +211,7 @@ function advancedSearch(
 }
 
 const streamerLogos = {
+  apple: "https://upload.wikimedia.org/wikipedia/commons/3/37/Apple_TV%2B_logo.png",
   netflix:
     "https://www.edigitalagency.com.au/wp-content/uploads/netflix-logo-png-large.png",
   hbo: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg",
