@@ -11,7 +11,7 @@
                 <button class="btn btn-primary me-1 basic-button"
                     @click.prevent="searchForMovie(searchTerm)">Search</button>
                 <button type="button" class="btn btn-primary advanced" data-bs-toggle="modal"
-                    data-bs-target="#exampleModalCenter">
+                    data-bs-target="#exampleModalCenter" v-on:click="getGenreIds(), getStreamingServiceNames()">
                     Advanced
                 </button>
             </div>
@@ -83,14 +83,12 @@
                 </div>
                 <div class="modal-body">
                     Genre:
-                    <select class="form-select" v-model="searchGenre"
-                        v-on:click="getGenreIds()">
+                    <select class="form-select" v-model="searchGenre">
                         <option :value="{ id: genre.id, name: genre.name }" v-for="genre in genres" :key="genre.id">{{
                             genre.name }}</option>
                     </select>
                     Streaming Service:
-                    <select class="form-select" aria-label="Default select example" v-model="searchStreamingService"
-                        v-on:click="getStreamingServiceNames()">
+                    <select class="form-select" aria-label="Default select example" v-model="searchStreamingService">
                         <option :value="streamer.id" v-for="streamer in streamers" :key="streamer.id">{{ streamer.id }}
                         </option>
                     </select>
