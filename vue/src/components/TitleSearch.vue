@@ -134,11 +134,6 @@ let noneFound = ref(false);
 function searchForMovie(searchTerm) {
   StreamingService.getMovieDetailsByName(searchTerm).then((response) => {
     let movieList = response.data.result;
-    if(movieList.length == 0){
-      noneFound.value = true;
-    }else{
-      noneFound.value = false;
-    }
     movies.value.length = 0;
     movieList.forEach((m) => {
       if (Object.hasOwn(m.streamingInfo, "us")) {
@@ -163,6 +158,11 @@ function searchForMovie(searchTerm) {
         }
       }
     });
+    if(movies.value.length == 0){
+      noneFound.value = true;
+    }else{
+      noneFound.value = false;
+    }
   });
   return movies;
 }
@@ -206,6 +206,11 @@ function advancedSearch(
         }
       }
     });
+    if(movies.value.length == 0){
+      noneFound.value = true;
+    }else{
+      noneFound.value = false;
+    }
   });
   return movies;
 }
