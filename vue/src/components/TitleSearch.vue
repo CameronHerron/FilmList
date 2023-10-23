@@ -129,18 +129,26 @@ let searchShowType = ref("");
 let searchKeyWord = ref("");
 let noneFound = ref(false);
 
+//query api with title search
 function searchForMovie(searchTerm) {
   StreamingService.getMovieDetailsByName(searchTerm).then((response) => {
     let movieList = response.data.result;
+
+    //clear previous results
     movies.value.length = 0;
+
+    //loop through JSON results. populate movies list
     movieList.forEach((m) => {
+      //only include US results
       if (Object.hasOwn(m.streamingInfo, "us")) {
         for (var key in m.streamingInfo.us) {
           for (var type in m.streamingInfo.us[key]) {
+            //only include results that are free or subscription based
             if (
               m.streamingInfo.us[key][type].type == "free" ||
               m.streamingInfo.us[key][type].type == "subscription"
             ) {
+              //check for duplicate results. only include one result for each title
               const found = movies.value.some((x) => x.title === m.title);
               if (!found){
                 movies.value.push({
@@ -156,6 +164,7 @@ function searchForMovie(searchTerm) {
         }
       }
     });
+    //if no applicable results are found, display error message
     if(movies.value.length == 0){
       noneFound.value = true;
     }else{
@@ -165,6 +174,7 @@ function searchForMovie(searchTerm) {
   return movies;
 }
 
+//query api with advanced search options
 function advancedSearch(
   searchGenre,
   searchStreamingService,
@@ -178,17 +188,19 @@ function advancedSearch(
     searchKeyWord
   ).then((response) => {
     let movieList = response.data.result;
-    if(movieList.length == 0){
-      noneFound.value = true;
-    }else{
-      noneFound.value = false;
-    }
+
+    //clear previous results
     movies.value.length = 0;
+
+    //loop through JSON results. populate movies list
     movieList.forEach((m) => {
+      //only include US results
       if (Object.hasOwn(m.streamingInfo, "us")) {
         for (var key in m.streamingInfo.us) {
           for (var type in m.streamingInfo.us[key]) {
+            //only include results that are free or subscription based
             if (m.streamingInfo.us[key][type].type == "subscription") {
+              //check for duplicate results. only include one result for each title
               const found = movies.value.some((x) => x.title === m.title);
               if (!found) {
                 movies.value.push({
@@ -204,6 +216,7 @@ function advancedSearch(
         }
       }
     });
+    //if no applicable results are found, display error message
     if(movies.value.length == 0){
       noneFound.value = true;
     }else{
@@ -213,6 +226,8 @@ function advancedSearch(
   return movies;
 }
 
+//image links to streamer logos. 
+// TODO: return to look for better sources
 const streamerLogos = {
   apple: "https://upload.wikimedia.org/wikipedia/commons/3/37/Apple_TV%2B_logo.png",
   netflix:
@@ -248,6 +263,7 @@ const streamerLogos = {
   zee5: "https://1000logos.net/wp-content/uploads/2022/01/Zee5-Logo.png",
 };
 
+//for each movie result, find the list of platforms it can be found on
 function getStreamerDetails(json) {
   let streamerDetails = [];
   if (Object.hasOwn(json, "us")) {
@@ -271,6 +287,7 @@ function getStreamerDetails(json) {
 
 const genres = ref([]);
 
+//populate genre info when advanced search modal is clicked
 function getGenreIds() {
   if (genres.value.length == 0) {
     StreamingService.getGenreIds().then((response) => {
@@ -290,6 +307,8 @@ function getGenreIds() {
 }
 
 const streamers = ref([]);
+
+//populate streamer info when advanced search modal is clicked
 function getStreamingServiceNames() {
   if (streamers.value.length == 0) {
     StreamingService.getStreamingServices().then((response) => {
@@ -459,9 +478,10 @@ header h1 {
   /* Chrome, Edge, and Safari */
   *::-webkit-scrollbar {
     width: 16px;
+    display: none;
   }
 
-  *::-webkit-scrollbar-track {
+  /* *::-webkit-scrollbar-track {
     background: #e5e7d9;
   }
 
@@ -469,7 +489,7 @@ header h1 {
     background-color: #20152e;
     border-radius: 10px;
     border: 3px solid #20152e;
-  }
+  } */
 
   .mobile, .desktop{
     display: none;
